@@ -10,39 +10,38 @@ services:
       cpu: 512
       memory: 512
       load_balancer:
-        tenancy: shared
-        type: mixed
-        healthcheck:
-          path: /
-          success_code: 200-299
-          port: 80
-        ports:
-          - number: 32400
-            protocol: tcp
-            type: webserver
-          - number: 32469
-            protocol: tcp
-            type: network
-          - number: 32410
-            protocol: udp
-            type: network
-          - number: 32412
-            protocol: udp
-            type: network
-          - number: 32413
-            protocol: udp
-            type: network
-          - number: 32414
-            protocol: udp
-            type: network
-          - number: 8324
-            protocol: tcp
-            type: network
-          - number: 3005
-            protocol: tcp
-            type: network
+        - tenancy: shared
+          type: webserver
+          healthcheck:
+            path: /
+            success_code: 200-299
+            port: 32400
+        - tenancy: shared
+          type: webserver
+          healthcheck:
+            path: /
+            success_code: 200-299
+            port: 8324
+        - tenancy: dedicated
+          type: network
+          port: 32469
+        - tenancy: dedicated
+          type: network
+          port: 32410
+        - tenancy: dedicated
+          type: network
+          port: 32412
+        - tenancy: dedicated
+          type: network
+          port: 32413
+        - tenancy: dedicated
+          type: network
+          port: 32414
+        - tenancy: dedicated
+          type: network
+          port: 3005
     environment:
-      - PLEX_CLAIM=claim-xxxxxx   # Replace with your actual claim token
+      - PLEX_CLAIM=claim-xxxxxx  # Replace with your actual claim token
       - ADVERTISE_IP=http://your-public-ip:32400/
       - TZ=Europe/London
     ports:
@@ -58,3 +57,45 @@ services:
       - /path/to/plex/config:/config
       - /path/to/plex/transcode:/transcode
       - /path/to/plex/data:/data
+
+  db:
+    image: mariadb:10.6.4-focal
+    restart: always
+    x-tinkr:
+      load_balancer:
+        tenancy: dedicated
+        type: network
+    environment:
+      - MYSQL_ROOT_PASSWORD=somewordpress
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=wordpress
+    expose:
+      - 3306
+
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - "80:80"
+    restart: always
+    x-tinkr:
+      environment: 
+        - WORDPRESS_DB_HOST=<hostname:db>
+      load_balancer:
+        tenancy: shared
+        type: webserver
+        healthcheck:
+          timeout: 10
+          healthy-threshold: 3
+          unhealthy-threshold: 5
+          port: 80
+          path: /
+          interval: 120
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=wordpress
+      - WORDPRESS_DB_NAME=wordpress
+    volumes:
+      - /path/to/wordpress/config:/config
+      - /path/to/wordpress/data:/data
