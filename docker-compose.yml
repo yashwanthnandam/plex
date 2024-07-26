@@ -11,11 +11,36 @@ services:
       memory: 512
       load_balancer:
         tenancy: shared
-        type: webserver
+        type: mixed
         healthcheck:
           path: /
           success_code: 200-299
           port: 80
+        ports:
+          - number: 32400
+            protocol: tcp
+            type: webserver
+          - number: 32469
+            protocol: tcp
+            type: network
+          - number: 32410
+            protocol: udp
+            type: network
+          - number: 32412
+            protocol: udp
+            type: network
+          - number: 32413
+            protocol: udp
+            type: network
+          - number: 32414
+            protocol: udp
+            type: network
+          - number: 8324
+            protocol: tcp
+            type: network
+          - number: 3005
+            protocol: tcp
+            type: network
     environment:
       - PLEX_CLAIM=claim-xxxxxx   # Replace with your actual claim token
       - ADVERTISE_IP=http://your-public-ip:32400/
@@ -23,7 +48,7 @@ services:
     ports:
       - "32400:32400/tcp"  # Plex Web UI
       - "32469:32469/tcp"  # Plex DLNA
-      - "32410:32410/udp"  # Plex GDMcd
+      - "32410:32410/udp"  # Plex GDM
       - "32412:32412/udp"  # Plex GDM
       - "32413:32413/udp"  # Plex GDM
       - "32414:32414/udp"  # Plex GDM
