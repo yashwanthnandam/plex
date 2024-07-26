@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  plex:
+    image: plexinc/pms-docker
+    container_name: plex
+    restart: unless-stopped
+    network_mode: bridge
+    x-tinkr:
+      cpu: 512
+      memory: 512
+      load_balancer:
+        tenancy: shared
+        type: webserver
+        healthcheck:
+          path: /
+          success_code: 200-299
+          port: 80
+    environment:
+      - PLEX_CLAIM=claim-xxxxxx   # Replace with your actual claim token
+      - ADVERTISE_IP=http://your-public-ip:32400/
+      - TZ=Europe/London
+    ports:
+      - "32400:32400/tcp"  # Plex Web UI
+      - "32469:32469/tcp"  # Plex DLNA
+      - "32410:32410/udp"  # Plex GDMcd
+      - "32412:32412/udp"  # Plex GDM
+      - "32413:32413/udp"  # Plex GDM
+      - "32414:32414/udp"  # Plex GDM
+      - "8324:8324/tcp"    # Plex companion
+      - "3005:3005/tcp"    # Plex HTPC
+    volumes:
+      - /path/to/plex/config:/config
+      - /path/to/plex/transcode:/transcode
+      - /path/to/plex/data:/data
