@@ -54,8 +54,11 @@ services:
       - "8324:8324/tcp"    # Plex companion
       - "3005:3005/tcp"    # Plex HTPC
     volumes:
-      - /path/to/plex/config:/config
-      - /path/to/plex/transcode:/transcode
-      - /path/to/plex/data:/data
+      - plex_config:/config
+      - plex_transcode:/transcode
+      - plex_data:/data
 
- 
+volumes:
+  plex_config:
+  plex_transcode:
+  plex_data:
