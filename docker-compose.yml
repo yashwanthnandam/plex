@@ -12,16 +12,16 @@ services:
       load_balancer:
         - tenancy: shared
           type: webserver
+          port: 32400
           healthcheck:
             path: /
             success_code: 200-299
-            port: 32400
         - tenancy: shared
           type: webserver
+          port: 8324
           healthcheck:
             path: /
             success_code: 200-299
-            port: 8324
         - tenancy: dedicated
           type: network
           port: 32469
