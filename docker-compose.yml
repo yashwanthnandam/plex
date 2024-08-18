@@ -12,38 +12,46 @@ services:
       load_balancer:
         - tenancy: shared
           type: webserver
+          port: 32400 
           healthcheck:
             path: /
             success_code: 200-299
             port: 32400  # Port moved inside healthcheck
         - tenancy: shared
           type: webserver
+          port: 8324
           healthcheck:
             path: /
             success_code: 200-299
             port: 8324  # Port moved inside healthcheck
         - tenancy: dedicated
           type: network
+          port: 32469
           healthcheck:
             port: 32469  # Port moved inside healthcheck
         - tenancy: dedicated
           type: network
+          port: 32410
           healthcheck:
             port: 32410  # Port moved inside healthcheck
         - tenancy: dedicated
           type: network
+          port: 32412
           healthcheck:
             port: 32412  # Port moved inside healthcheck
         - tenancy: dedicated
           type: network
+          port: 32413
           healthcheck:
             port: 32413  # Port moved inside healthcheck
         - tenancy: dedicated
           type: network
+          port: 32414
           healthcheck:
             port: 32414  # Port moved inside healthcheck
         - tenancy: dedicated
           type: network
+          port: 3005
           healthcheck:
             port: 3005  # Port moved inside healthcheck
     environment:
