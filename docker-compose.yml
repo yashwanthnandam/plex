@@ -12,61 +12,69 @@ services:
       load_balancer:
         - tenancy: shared
           type: webserver
-          port: 32400 
+          port: 32400
+          protocol: tcp
           healthcheck:
             path: /
             success_code: 200-299
-            port: 32400  # Port moved inside healthcheck
+            port: 32400
         - tenancy: shared
           type: webserver
           port: 8324
+          protocol: tcp
           healthcheck:
             path: /
             success_code: 200-299
-            port: 8324  # Port moved inside healthcheck
+            port: 8324
         - tenancy: dedicated
           type: network
           port: 32469
+          protocol: tcp
           healthcheck:
-            port: 32469  # Port moved inside healthcheck
+            port: 32469
         - tenancy: dedicated
           type: network
           port: 32410
+          protocol: udp
           healthcheck:
-            port: 32410  # Port moved inside healthcheck
+            port: 32410
         - tenancy: dedicated
           type: network
           port: 32412
+          protocol: udp
           healthcheck:
-            port: 32412  # Port moved inside healthcheck
+            port: 32412
         - tenancy: dedicated
           type: network
           port: 32413
+          protocol: udp
           healthcheck:
-            port: 32413  # Port moved inside healthcheck
+            port: 32413
         - tenancy: dedicated
           type: network
           port: 32414
+          protocol: udp
           healthcheck:
-            port: 32414  # Port moved inside healthcheck
+            port: 32414
         - tenancy: dedicated
           type: network
           port: 3005
+          protocol: tcp
           healthcheck:
-            port: 3005  # Port moved inside healthcheck
+            port: 3005
     environment:
-      - PLEX_CLAIM=claim-xxxxxx  # Replace with your actual claim token
+      - PLEX_CLAIM=claim-xxxxxx
       - ADVERTISE_IP=http://your-public-ip:32400/
       - TZ=Europe/London
     ports:
-      - "32400:32400/tcp"  # Plex Web UI
-      - "32469:32469/tcp"  # Plex DLNA
-      - "32410:32410/udp"  # Plex GDM
-      - "32412:32412/udp"  # Plex GDM
-      - "32413:32413/udp"  # Plex GDM
-      - "32414:32414/udp"  # Plex GDM
-      - "8324:8324/tcp"    # Plex companion
-      - "3005:3005/tcp"    # Plex HTPC
+      - "32400:32400/tcp"
+      - "32469:32469/tcp"
+      - "32410:32410/udp"
+      - "32412:32412/udp"
+      - "32413:32413/udp"
+      - "32414:32414/udp"
+      - "8324:8324/tcp"
+      - "3005:3005/tcp"
     volumes:
       - plex_config:/config
       - plex_transcode:/transcode
