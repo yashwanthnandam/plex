@@ -18,14 +18,6 @@ services:
             path: /
             success_code: 200-299
             port: 32400
-        - tenancy: shared
-          type: webserver
-          port: 8324
-          protocol: tcp
-          healthcheck:
-            path: /
-            success_code: 200-299
-            port: 8324
         - tenancy: dedicated
           type: network
           port: 32469
@@ -44,6 +36,12 @@ services:
           protocol: udp
           healthcheck:
             port: 32412
+        - tenancy: dedicated
+          type: network
+          port: 32413
+          protocol: udp
+          healthcheck:
+            port: 32413
     environment:
       - PLEX_CLAIM=claim-xxxxxx
       - ADVERTISE_IP=http://your-public-ip:32400/
