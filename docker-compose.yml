@@ -44,24 +44,6 @@ services:
           protocol: udp
           healthcheck:
             port: 32412
-        - tenancy: dedicated
-          type: network
-          port: 32413
-          protocol: udp
-          healthcheck:
-            port: 32413
-        - tenancy: dedicated
-          type: network
-          port: 32414
-          protocol: udp
-          healthcheck:
-            port: 32414
-        - tenancy: dedicated
-          type: network
-          port: 3005
-          protocol: tcp
-          healthcheck:
-            port: 3005
     environment:
       - PLEX_CLAIM=claim-xxxxxx
       - ADVERTISE_IP=http://your-public-ip:32400/
