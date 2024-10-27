@@ -5,31 +5,57 @@ services:
     image: plexinc/pms-docker
     container_name: plex
     restart: unless-stopped
-    network_mode: bridge
     x-tinkr:
       cpu: 512
       memory: 512
-      load_balancer:
-        tenancy: shared
-        type: webserver
-        healthcheck:
-          path: /
-          success_code: 200-299
-          port: 80
+      environment:
+        - PLEX_CLAIM=claim-xxxxxx  
+        - ADVERTISE_IP=http://your-public-ip:32400/
+        - TZ=Europe/London
+      network:
+        public: true  
+      ports:
+        plex-web:
+          port: 32400
+          protocol: http
+          public: true
+          healthcheck:
+            path: /
+            success_code: 200-299
+            interval: 30
+            timeout: 5
+            retries: 3
+        # plex-dlna:
+        #   port: 32469
+        #   protocol: http
+        #   public: false 
+        plex-gdm-1:
+          port: 32410
+          protocol: udp
+          public: false  # Internal access only
+        plex-gdm-2:
+          port: 32412
+          protocol: udp
+          public: false  # Internal access only
+        plex-gdm-3:
+          port: 32413
+          protocol: udp
+          public: false  # Internal access only
+        # plex-gdm-4:
+        #   port: 32414
+        #   protocol: udp
+        #   public: false  # Internal access only
+        # plex-companion:
+        #   port: 8324
+        #   protocol: tcp
+        #   public: false  # Internal access only
+        # plex-htpc:
+        #   port: 3005
+        #   protocol: tcp
+        #   public: false  # Internal access only
     environment:
-      - PLEX_CLAIM=claim-xxxxxx   # Replace with your actual claim token
+      - PLEX_CLAIM=claim-xxxxxx   
       - ADVERTISE_IP=http://your-public-ip:32400/
       - TZ=Europe/London
-    ports:
-      - "32400:32400/tcp"  # Plex Web UI
-      - "32469:32469/tcp"  # Plex DLNA
-      - "32410:32410/udp"  # Plex GDMcd
-      - "32412:32412/udp"  # Plex GDM
-      - "32413:32413/udp"  # Plex GDM
-      - "32414:32414/udp"  # Plex GDM
-      - "8324:8324/tcp"    # Plex companion
-      - "3005:3005/tcp"    # Plex HTPC
     volumes:
-      - /path/to/plex/config:/config
-      - /path/to/plex/transcode:/transcode
-      - /path/to/plex/data:/data
+      - plex_data:/var/lib/ghost/content
